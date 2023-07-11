@@ -17,6 +17,12 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
+  const total = good + neutral + bad;
+
+  const average = (good - bad) / total;
+
+  const positive = `${(good / total) * 100} %`;
+
   return (
     <div>
       <Title text='give feedback' />
@@ -27,6 +33,11 @@ const App = () => {
       <Statistic text='good' value={good} />
       <Statistic text='neutral' value={neutral} />
       <Statistic text='bad' value={bad} />
+      <Statistic text='total' value={total} />
+      {!isNaN(average) && <Statistic text='average' value={average} />}
+      {!isNaN((good / total) * 100) && (
+        <Statistic text='positive' value={positive} />
+      )}
     </div>
   );
 };
