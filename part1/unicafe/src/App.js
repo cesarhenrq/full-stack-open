@@ -6,7 +6,7 @@ const Button = ({ text, handleClick }) => (
   <button onClick={handleClick}>{text}</button>
 );
 
-const Statistic = ({ text, value }) => (
+const StatisticLine = ({ text, value }) => (
   <p>
     {text} {value}
   </p>
@@ -27,13 +27,13 @@ const Statistics = ({ good, neutral, bad }) => {
     } else {
       return (
         <div>
-          <Statistic text='good' value={good} />
-          <Statistic text='neutral' value={neutral} />
-          <Statistic text='bad' value={bad} />
-          <Statistic text='total' value={total} />
-          {!isNaN(average) && <Statistic text='average' value={average} />}
+          <StatisticLine text='good' value={good} />
+          <StatisticLine text='neutral' value={neutral} />
+          <StatisticLine text='bad' value={bad} />
+          <StatisticLine text='total' value={total} />
+          {!isNaN(average) && <StatisticLine text='average' value={average} />}
           {!isNaN((good / total) * 100) && (
-            <Statistic text='positive' value={positive} />
+            <StatisticLine text='positive' value={positive} />
           )}
         </div>
       );
