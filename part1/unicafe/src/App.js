@@ -7,17 +7,18 @@ const Button = ({ text, handleClick }) => (
 );
 
 const StatisticLine = ({ text, value }) => (
-  <p>
-    {text} {value}
-  </p>
+  <>
+    <td>{text}</td>
+    <td>{value}</td>
+  </>
 );
 
 const Statistics = ({ good, neutral, bad }) => {
   const total = good + neutral + bad;
 
-  const average = (good - bad) / total;
+  const average = ((good - bad) / total).toFixed(1);
 
-  const positive = `${(good / total) * 100} %`;
+  const positive = `${((good / total) * 100).toFixed(2)} %`;
 
   const hasFeedback = total > 0;
 
@@ -26,16 +27,32 @@ const Statistics = ({ good, neutral, bad }) => {
       return <p>No feedback given</p>;
     } else {
       return (
-        <div>
-          <StatisticLine text='good' value={good} />
-          <StatisticLine text='neutral' value={neutral} />
-          <StatisticLine text='bad' value={bad} />
-          <StatisticLine text='total' value={total} />
-          {!isNaN(average) && <StatisticLine text='average' value={average} />}
-          {!isNaN((good / total) * 100) && (
-            <StatisticLine text='positive' value={positive} />
-          )}
-        </div>
+        <table>
+          <tbody>
+            <tr>
+              <StatisticLine text='good' value={good} />
+            </tr>
+            <tr>
+              <StatisticLine text='neutral' value={neutral} />
+            </tr>
+            <tr>
+              <StatisticLine text='bad' value={bad} />
+            </tr>
+            <tr>
+              <StatisticLine text='total' value={total} />
+            </tr>
+            <tr>
+              {!isNaN(average) && (
+                <StatisticLine text='average' value={average} />
+              )}
+            </tr>
+            <tr>
+              {!isNaN((good / total) * 100) && (
+                <StatisticLine text='positive' value={positive} />
+              )}
+            </tr>
+          </tbody>
+        </table>
       );
     }
   }
