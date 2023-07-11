@@ -19,19 +19,26 @@ const Statistics = ({ good, neutral, bad }) => {
 
   const positive = `${(good / total) * 100} %`;
 
-  return (
-    <div>
-      <Title text='statistics' />
-      <Statistic text='good' value={good} />
-      <Statistic text='neutral' value={neutral} />
-      <Statistic text='bad' value={bad} />
-      <Statistic text='total' value={total} />
-      {!isNaN(average) && <Statistic text='average' value={average} />}
-      {!isNaN((good / total) * 100) && (
-        <Statistic text='positive' value={positive} />
-      )}
-    </div>
-  );
+  const hasFeedback = total > 0;
+
+  {
+    if (!hasFeedback) {
+      return <p>No feedback given</p>;
+    } else {
+      return (
+        <div>
+          <Statistic text='good' value={good} />
+          <Statistic text='neutral' value={neutral} />
+          <Statistic text='bad' value={bad} />
+          <Statistic text='total' value={total} />
+          {!isNaN(average) && <Statistic text='average' value={average} />}
+          {!isNaN((good / total) * 100) && (
+            <Statistic text='positive' value={positive} />
+          )}
+        </div>
+      );
+    }
+  }
 };
 
 const App = () => {
