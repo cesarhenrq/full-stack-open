@@ -1,11 +1,14 @@
 import { useState } from "react";
 
-const Title = ({ text }) => <h1>{text}</h1>;
+const Title = ({ text }) => <h2>{text}</h2>;
 
-const FormPerson = ({ onSubmit, value, onChange }) => (
+const FormPerson = ({ onSubmit, fields, onChange }) => (
   <form onSubmit={onSubmit}>
     <div>
-      name: <input value={value} onChange={onChange} />
+      name: <input value={fields.name} onChange={onChange} name='name' />
+    </div>
+    <div>
+      number: <input value={fields.number} onChange={onChange} name='number' />
     </div>
     <div>
       <button type='submit'>add</button>
@@ -15,7 +18,8 @@ const FormPerson = ({ onSubmit, value, onChange }) => (
 
 const Person = ({ person }) => (
   <p>
-    {person.name} <br />
+    {person.name} {person.number}
+    <br />
   </p>
 );
 
@@ -28,26 +32,36 @@ const Persons = ({ persons }) => (
 );
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
-  const [newName, setNewName] = useState("");
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456" },
+  ]);
 
-  const handleChange = (event) => setNewName(event.target.value);
+  const [newContact, setNewContact] = useState({
+    name: "",
+    number: "",
+  });
+
+  const handleChange = (event) =>
+    setNewContact({ ...newContact, [event.target.name]: event.target.value });
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const person = {
-      name: newName,
+      ...newContact,
     };
 
-    if (persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if (persons.some((person) => person.name === newContact.name)) {
+      alert(`${newContact.name} is already added to phonebook`);
       return;
     }
 
     setPersons(persons.concat(person));
 
-    setNewName("");
+    setNewContact({
+      name: "",
+      number: "",
+    });
   };
 
   return (
@@ -55,7 +69,7 @@ const App = () => {
       <Title text='Phonebook' />
       <FormPerson
         onSubmit={handleSubmit}
-        value={newName}
+        fields={newContact}
         onChange={handleChange}
       />
       <Title text='Numbers' />
