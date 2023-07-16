@@ -2,6 +2,13 @@ import { useState } from "react";
 
 const Title = ({ text }) => <h2>{text}</h2>;
 
+const FormFilter = ({ value, onChange }) => (
+  <div>
+    filter shown with{" "}
+    <input value={value} onChange={(event) => onChange(event.target.value)} />
+  </div>
+);
+
 const FormPerson = ({ onSubmit, fields, onChange }) => (
   <form onSubmit={onSubmit}>
     <div>
@@ -23,13 +30,21 @@ const Person = ({ person }) => (
   </p>
 );
 
-const Persons = ({ persons }) => (
-  <div>
-    {persons.map((person) => (
-      <Person key={person.name} person={person} />
-    ))}
-  </div>
-);
+const Persons = ({ persons, filter }) => {
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(filter)
+  );
+
+  const personsToShow = filter ? filteredPersons : persons;
+
+  return (
+    <div>
+      {personsToShow.map((person) => (
+        <Person key={person.name} person={person} />
+      ))}
+    </div>
+  );
+};
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -40,6 +55,8 @@ const App = () => {
     name: "",
     number: "",
   });
+
+  const [filter, setFilter] = useState("");
 
   const handleChange = (event) =>
     setNewContact({ ...newContact, [event.target.name]: event.target.value });
@@ -67,13 +84,15 @@ const App = () => {
   return (
     <div>
       <Title text='Phonebook' />
+      <FormFilter value={filter} onChange={setFilter} />
+      <Title text='Add a new' />
       <FormPerson
         onSubmit={handleSubmit}
         fields={newContact}
         onChange={handleChange}
       />
       <Title text='Numbers' />
-      <Persons persons={persons} />
+      <Persons persons={persons} filter={filter} />
     </div>
   );
 };
