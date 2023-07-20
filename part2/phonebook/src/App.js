@@ -36,7 +36,35 @@ const App = () => {
       ...newContact,
     };
 
-    if (persons.some((person) => person.name === newContact.name)) {
+    const personIndex = persons.findIndex(
+      (person) => person.name === newContact.name
+    );
+
+    const isAlreadyAdded = persons.some(
+      (person) => person.name === newContact.name
+    );
+
+    const hasDifferentNumber =
+      persons[personIndex]?.number !== newContact.number;
+
+    if (isAlreadyAdded && hasDifferentNumber) {
+      const shouldUpdate = window.confirm(
+        `${newContact.name} is already added to phonebook, replace the old number with a new one?`
+      );
+
+      if (shouldUpdate) {
+        personService
+          .update(persons[personIndex].id, person)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== persons[personIndex].id ? person : returnedPerson
+              )
+            );
+          });
+      }
+      return;
+    } else if (isAlreadyAdded && !hasDifferentNumber) {
       alert(`${newContact.name} is already added to phonebook`);
       return;
     }
