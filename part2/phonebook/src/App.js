@@ -74,6 +74,20 @@ const App = () => {
             setTimeout(() => {
               setNotification(null);
             }, 5000);
+          })
+          .catch((error) => {
+            setNotification({
+              message: `Information of ${persons[personIndex].name} has already been removed from server`,
+              error: true,
+            });
+
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
+
+            setPersons(
+              persons.filter((person) => person.id !== persons[personIndex].id)
+            );
           });
       }
       return;
@@ -102,9 +116,27 @@ const App = () => {
 
   const handleDelete = (personToDelete) => {
     if (window.confirm(`Delete ${personToDelete.name} ?`)) {
-      personService.deletePerson(personToDelete.id).then(() => {
-        setPersons(persons.filter((person) => person.id !== personToDelete.id));
-      });
+      personService
+        .deletePerson(personToDelete.id)
+        .then(() => {
+          setPersons(
+            persons.filter((person) => person.id !== personToDelete.id)
+          );
+        })
+        .catch((error) => {
+          setNotification({
+            message: `Information of ${personToDelete.name} has already been removed from server`,
+            error: true,
+          });
+
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+
+          setPersons(
+            persons.filter((person) => person.id !== personToDelete.id)
+          );
+        });
     }
   };
 
