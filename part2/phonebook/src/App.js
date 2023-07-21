@@ -10,6 +10,8 @@ import Persons from "./components/Persons";
 
 import personService from "./services/persons";
 
+import Notification from "./components/Notification";
+
 const App = () => {
   const [persons, setPersons] = useState([]);
 
@@ -19,6 +21,8 @@ const App = () => {
   });
 
   const [filter, setFilter] = useState("");
+
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -61,6 +65,15 @@ const App = () => {
                 person.id !== persons[personIndex].id ? person : returnedPerson
               )
             );
+
+            setNotification({
+              message: `Updated ${returnedPerson.name}`,
+              error: false,
+            });
+
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
           });
       }
       return;
@@ -71,6 +84,14 @@ const App = () => {
 
     personService.create(person).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
+      setNotification({
+        message: `Added ${returnedPerson.name}`,
+        error: false,
+      });
+
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
 
       setNewContact({
         name: "",
@@ -90,6 +111,7 @@ const App = () => {
   return (
     <div>
       <Title text='Phonebook' />
+      <Notification notification={notification} />
       <Filter value={filter} onChange={setFilter} />
       <Title text='Add a new' />
       <FormPerson
