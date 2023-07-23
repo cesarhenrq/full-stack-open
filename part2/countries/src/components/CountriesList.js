@@ -1,6 +1,6 @@
 import React from "react";
 
-export const CountriesList = ({ countries, onShowClick }) => {
+const CountriesList = ({ countries, onShowClick }) => {
   return (
     <>
       {countries.map((country) => (
@@ -12,3 +12,5 @@ export const CountriesList = ({ countries, onShowClick }) => {
     </>
   );
 };
+
+export default CountriesList;

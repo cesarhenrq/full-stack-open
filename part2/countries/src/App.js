@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 
 import SearchBar from "./components/SearchBar";
 import Country from "./components/Country";
+import Notification from "./components/Notification";
+import CountriesList from "./components/CountriesList";
+import Weather from "./components/Weather";
 
 import countryService from "./services/countries";
-import Notification from "./components/Notification";
-import { CountriesList } from "./components/CountriesList";
+import weatherService from "./services/weather";
 
 const App = () => {
   const [query, setQuery] = useState("");
@@ -14,16 +16,27 @@ const App = () => {
 
   const [country, setCountry] = useState(null);
 
+  const [weather, setWeather] = useState(null);
+
   const onQueryChange = (event) => {
     setQuery(event.target.value);
 
-    if (country) {
+    if (country || weather) {
       setCountry(null);
+      setWeather(null);
     }
   };
 
   const onShowClick = (country) => {
     setCountry(country);
+
+    const fetchWeather = () => {
+      weatherService.getWeather(country.capital[0]).then((weather) => {
+        setWeather(weather);
+      });
+    };
+
+    fetchWeather();
   };
 
   useEffect(() => {
@@ -70,6 +83,7 @@ const App = () => {
         />
       )}
       {showCountry && <Country country={country} />}
+      {weather && <Weather weather={weather} />}
     </div>
   );
 };
