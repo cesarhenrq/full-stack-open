@@ -96,22 +96,34 @@ const App = () => {
       return;
     }
 
-    personService.create(person).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNotification({
-        message: `Added ${returnedPerson.name}`,
-        error: false,
-      });
+    personService
+      .create(person)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNotification({
+          message: `Added ${returnedPerson.name}`,
+          error: false,
+        });
 
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
 
-      setNewContact({
-        name: "",
-        number: "",
+        setNewContact({
+          name: "",
+          number: "",
+        });
+      })
+      .catch((error) => {
+        setNotification({
+          message: error.response.data.error,
+          error: true,
+        });
+
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       });
-    });
   };
 
   const handleDelete = (personToDelete) => {
