@@ -25,9 +25,21 @@ const App = () => {
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    personService.getAll().then((initialPersons) => {
-      setPersons(initialPersons);
-    });
+    personService
+      .getAll()
+      .then((initialPersons) => {
+        setPersons(initialPersons);
+      })
+      .catch((error) => {
+        setNotification({
+          message: "Error loading data, please try again later",
+          error: true,
+        });
+
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
+      });
   }, []);
 
   const handleChange = (event) =>
@@ -76,18 +88,29 @@ const App = () => {
             }, 5000);
           })
           .catch((error) => {
-            setNotification({
-              message: `Information of ${persons[personIndex].name} has already been removed from server`,
-              error: true,
-            });
+            if (error.response.status === 404) {
+              setNotification({
+                message: `Information of ${persons[personIndex].name} has already been removed from server`,
+                error: true,
+              });
+
+              setPersons(
+                persons.filter(
+                  (person) => person.id !== persons[personIndex].id
+                )
+              );
+            }
+
+            if (error.response.status === 400) {
+              setNotification({
+                message: error.response.data.error,
+                error: true,
+              });
+            }
 
             setTimeout(() => {
               setNotification(null);
             }, 5000);
-
-            setPersons(
-              persons.filter((person) => person.id !== persons[personIndex].id)
-            );
           });
       }
       return;
